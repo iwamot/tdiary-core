@@ -135,6 +135,41 @@ module TDiary
 	end
 end
 
+module TDiary
+	module Cache
+		private
+
+		def restore_data(key)
+			obj = redis.get(key)
+			if obj.nil?
+				nil
+			else
+				YAML.unsafe_load(obj)
+			end
+		end
+
+		def restore_parser_cache(date, key = nil)
+			obj = redis.get(date.strftime("%Y%m.parser"))
+			if obj.nil?
+				nil
+			else
+				YAML.unsafe_load(obj)
+			end
+		end
+
+		def redis
+			@@_client ||= if @tdiary.conf.user_name
+				Redis::Namespace.new(
+					@tdiary.conf.user_name.to_sym,
+					redis: Redis.new(host: ENV["REDIS_HOST"], port: ENV["REDIS_PORT"])
+				)
+			else
+				Redis.new(host: ENV["REDIS_HOST"], port: ENV["REDIS_PORT"])
+			end
+		end
+	end
+end
+
 # Local Variables:
 # mode: ruby
 # indent-tabs-mode: t

@@ -7,6 +7,7 @@ WORKDIR /usr/src/app
 COPY [ "Gemfile", "Gemfile.lock", "/usr/src/app/" ]
 RUN apt update && apt install -y apt-utils libidn11-dev; \
     echo 'gem "puma" \n\
+    gem "tdiary-cache-redis" \n\
     gem "tdiary-contrib" \n\
     gem "tdiary-style-gfm" \n\
     gem "tdiary-style-rd" \n'\
